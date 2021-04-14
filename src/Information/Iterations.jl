@@ -91,22 +91,22 @@ end
 # Residue pairs: The output is a Named PairwiseListMatrix
 # -------------------------------------------------------
 
-function _mappairfreq!(f::Function,
-res_list::Vector{V}, # sequences or columns
-plm::PairwiseListMatrix{T,D,TV}, # output
-table::Union{Probabilities{T,2,A},Counts{T,2,A}},
-usediagonal::Type{Val{D}} = Val{true};
-weights = NoClustering(),
-pseudocounts::Pseudocount = NoPseudocount(),
-pseudofrequencies::Pseudofrequencies = NoPseudofrequencies(),
-diagonalvalue::T = zero(T)) where {T,D,TV,A,V<:AbstractArray{Residue}} # diagonalvalue used by mapcolpairfreq! ...
-    @inbounds @iterateupper plm D begin
-        list[k] = :($_mapfreq_kernel!)(:($f), :($table), :($weights),
-                                       :($pseudocounts), :($pseudofrequencies),
-                                       :($res_list)[i], :($res_list)[j])
-    end
-    plm
-end
+# function _mappairfreq!(f::Function,
+# res_list::Vector{V}, # sequences or columns
+# plm::PairwiseListMatrix{T,D,TV}, # output3
+# table::Union{Probabilities{T,2,A},Counts{T,2,A}},
+# usediagonal::Type{Val{D}} = Val{true};
+# weights = NoClustering(),
+# pseudocounts::Pseudocount = NoPseudocount(),
+# pseudofrequencies::Pseudofrequencies = NoPseudofrequencies(),
+# diagonalvalue::T = zero(T)) where {T,D,TV,A,V<:AbstractArray{Residue}} # diagonalvalue used by mapcolpairfreq! ...
+#     @inbounds apply2upper plm D begin
+#         list[k] = :($_mapfreq_kernel!)(:($f), :($table), :($weights),
+#                                        :($pseudocounts), :($pseudofrequencies),
+#                                        :($res_list)[i], :($res_list)[j])
+#     end
+#     plm
+# end
 
 # Map to column pairs
 
@@ -120,19 +120,19 @@ to identical element pairs (default to `Val{true}`).
 $_mapfreq_kargs_doc
 $_mappairfreq_kargs_doc
 """
-function mapcolpairfreq!(f::Function, msa::AbstractMatrix{Residue},
-                         table::Union{Probabilities{T,2,A},Counts{T,2,A}},
-                         usediagonal::Type{Val{D}} = Val{true};
-                         diagonalvalue::T = zero(T),
-                         kargs...) where {T,A,D}
-    ncol = ncolumns(msa)
-    residues = _get_matrix_residue(msa)
-    columns = map(i -> view(residues,:,i), 1:ncol) # 2x faster than calling view inside the loop
-    scores = columnpairsmatrix(msa, T, Val{D}, diagonalvalue) # Named PairwiseListMatrix
-    plm = getarray(scores)::PairwiseListMatrix{T,D,Vector{T}} # PairwiseListMatrix
-    _mappairfreq!(f, columns, plm, table, Val{D}; kargs...)
-    scores
-end
+# function mapcolpairfreq!(f::Function, msa::AbstractMatrix{Residue},
+#                          table::Union{Probabilities{T,2,A},Counts{T,2,A}},
+#                          usediagonal::Type{Val{D}} = Val{true};
+#                          diagonalvalue::T = zero(T),
+#                          kargs...) where {T,A,D}
+#     ncol = ncolumns(msa)
+#     residues = _get_matrix_residue(msa)
+#     columns = map(i -> view(residues,:,i), 1:ncol) # 2x faster than calling view inside the loop
+#     scores = columnpairsmatrix(msa, T, Val{D}, diagonalvalue) # Named PairwiseListMatrix
+#     plm = getarray(scores)::PairwiseListMatrix{T,D,Vector{T}} # PairwiseListMatrix
+#     _mappairfreq!(f, columns, plm, table, Val{D}; kargs...)
+#     scores
+# end
 
 # Map to sequence pairs
 
@@ -146,17 +146,17 @@ to identical element pairs (default to `Val{true}`).
 $_mapfreq_kargs_doc
 $_mappairfreq_kargs_doc
 """
-function mapseqpairfreq!(f::Function, msa::AbstractMatrix{Residue},
-                         table::Union{Probabilities{T,2,A},Counts{T,2,A}},
-                         usediagonal::Type{Val{D}} = Val{true};
-                         diagonalvalue::T = zero(T),
-                         kargs...) where {T,A,D}
-    sequences = getresiduesequences(msa)
-    scores = sequencepairsmatrix(msa, T, Val{D}, diagonalvalue) # Named PairwiseListMatrix
-    plm = getarray(scores)::PairwiseListMatrix{T,D,Vector{T}} # PairwiseListMatrix
-    _mappairfreq!(f, sequences, plm, table, Val{D}; kargs...)
-    scores
-end
+# function mapseqpairfreq!(f::Function, msa::AbstractMatrix{Residue},
+#                          table::Union{Probabilities{T,2,A},Counts{T,2,A}},
+#                          usediagonal::Type{Val{D}} = Val{true};
+#                          diagonalvalue::T = zero(T),
+#                          kargs...) where {T,A,D}
+#     sequences = getresiduesequences(msa)
+#     scores = sequencepairsmatrix(msa, T, Val{D}, diagonalvalue) # Named PairwiseListMatrix
+#     plm = getarray(scores)::PairwiseListMatrix{T,D,Vector{T}} # PairwiseListMatrix
+#     _mappairfreq!(f, sequences, plm, table, Val{D}; kargs...)
+#     scores
+# end
 
 # cMI
 # ===
@@ -173,25 +173,25 @@ Nielsen. *Networks of high mutual information define the structural proximity of
 sites: implications for catalytic residue identification.* PLoS Comput Biol 6, no. 11
 (2010): e1000978.
 """
-function cumulative(plm::PairwiseListMatrix{T,D,VT}, threshold::T) where {T,D,VT}
-    N = size(plm, 1)
-    out = zeros(T, N)
-    @iterateupper plm false begin
-        elem = list[k]
-        if !isnan(elem) && elem >= :($threshold)
-            :($out)[i] += elem
-            :($out)[j] += elem
-        end
-    end
-    reshape(out, (1,N))
-end
+# function cumulative(plm::PairwiseListMatrix{T,D,VT}, threshold::T) where {T,D,VT}
+#     N = size(plm, 1)
+#     out = zeros(T, N)
+#     @iterateupper plm false begin
+#         elem = list[k]
+#         if !isnan(elem) && elem >= :($threshold)
+#             :($out)[i] += elem
+#             :($out)[j] += elem
+#         end
+#     end
+#     reshape(out, (1,N))
+# end
 
-function cumulative(nplm::NamedArray{T,2,PairwiseListMatrix{T,D,TV},DN},
-                    threshold::T) where {T,D,TV,DN}
-    N = size(nplm, 2)
-    name_list = names(nplm, 2)
-    NamedArray(cumulative(getarray(nplm), threshold),
-               (OrderedDict{String,Int}("cumulative" => 1),
-               OrderedDict{String,Int}(name_list[i] => i for i in 1:N)),
-               ("Function", dimnames(nplm,2)))
-end
+# function cumulative(nplm::NamedArray{T,2,PairwiseListMatrix{T,D,TV},DN},
+#                     threshold::T) where {T,D,TV,DN}
+#     N = size(nplm, 2)
+#     name_list = names(nplm, 2)
+#     NamedArray(cumulative(getarray(nplm), threshold),
+#                (OrderedDict{String,Int}("cumulative" => 1),
+#                OrderedDict{String,Int}(name_list[i] => i for i in 1:N)),
+#                ("Function", dimnames(nplm,2)))
+# end
