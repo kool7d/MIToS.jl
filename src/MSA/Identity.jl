@@ -238,11 +238,11 @@ the output element type with the `out` keyword argument (`Float64` by default). 
 MSA with a lot of sequences, you can use `out=Float32` or `out=Flot16` in order to
 avoid the `OutOfMemoryError()`.
 """
-function percentsimilarity(msa::AbstractMatrix{Residue}, A...; out::Type=Float64)
-    M = getresiduesequences(msa)
-    P = sequencepairsmatrix(msa, out, Val{false}, out(100.0))
-    @inbounds @iterateupper getarray(P) false begin
-        list[k]=:($percentsimilarity)(:($M)[i],:($M)[j],:($A)...)
-    end
-    P
-end
+# function percentsimilarity(msa::AbstractMatrix{Residue}, A...; out::Type=Float64)
+#     M = getresiduesequences(msa)
+#     P = sequencepairsmatrix(msa, out, Val{false}, out(100.0))
+#     @inbounds @iterateupper getarray(P) false begin
+#         list[k]=:($percentsimilarity)(:($M)[i],:($M)[j],:($A)...)
+#     end
+#     P
+# end
