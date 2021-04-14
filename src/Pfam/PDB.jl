@@ -189,26 +189,26 @@ indicates a residue contact. Contacts are defined with an inter residue distance
 equal to `distance_limit` (default to `6.05`) angstroms between any heavy atom. `NaN`
 indicates a missing value.
 """
-function msacontacts(msa::AnnotatedMultipleSequenceAlignment,
-                     residues::AbstractDict{String,PDBResidue},
-                     column2residues::AbstractDict{Int,String},
-                     distance_limit::Float64=6.05)
-    colmap   = getcolumnmapping(msa)
-    contacts = columnpairsmatrix(msa)
-    plm = getarray(contacts)
-    @inbounds @iterateupper plm false begin
+# function msacontacts(msa::AnnotatedMultipleSequenceAlignment,
+#                      residues::AbstractDict{String,PDBResidue},
+#                      column2residues::AbstractDict{Int,String},
+#                      distance_limit::Float64=6.05)
+#     colmap   = getcolumnmapping(msa)
+#     contacts = columnpairsmatrix(msa)
+#     plm = getarray(contacts)
+#     @inbounds @iterateupper plm false begin
 
-        resi = get(:($column2residues), :($colmap)[i], "")
-        resj = get(:($column2residues), :($colmap)[j], "")
-        if resi != "" && resj != "" && haskey(:($residues), resi) && haskey(:($residues), resj)
-            list[k] = Float64(:($contact)(:($residues)[resi], :($residues)[resj], :($distance_limit)))
-        else
-            list[k] = NaN
-        end
+#         resi = get(:($column2residues), :($colmap)[i], "")
+#         resj = get(:($column2residues), :($colmap)[j], "")
+#         if resi != "" && resj != "" && haskey(:($residues), resi) && haskey(:($residues), resj)
+#             list[k] = Float64(:($contact)(:($residues)[resi], :($residues)[resj], :($distance_limit)))
+#         else
+#             list[k] = NaN
+#         end
 
-    end
-    contacts
-end
+#     end
+#     contacts
+# end
 
 # AUC (contact prediction)
 # ========================
