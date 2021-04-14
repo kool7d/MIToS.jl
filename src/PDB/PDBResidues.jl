@@ -556,14 +556,14 @@ end
 # Contacts and distances
 # ----------------------
 
-function squared_distance(residues::Vector{PDBResidue}; criteria::String="All")
-    nplm = residuepairsmatrix(residues, Float64, Val{false}, 0.0)
-    plm = getarray(nplm)
-    @iterateupper plm false begin
-        list[k] = :($squared_distance)(:($residues)[i], :($residues)[j], criteria = :($criteria))
-    end
-    nplm
-end
+# function squared_distance(residues::Vector{PDBResidue}; criteria::String="All")
+#     nplm = residuepairsmatrix(residues, Float64, Val{false}, 0.0)
+#     plm = getarray(nplm)
+#     @iterateupper plm false begin
+#         list[k] = :($squared_distance)(:($residues)[i], :($residues)[j], criteria = :($criteria))
+#     end
+#     nplm
+# end
 
 """
 `contact(residues::Vector{PDBResidue}, limit::AbstractFloat; criteria::String="All")`
@@ -571,14 +571,14 @@ end
 If `contact` takes a `Vector{PDBResidue}`, It returns a matrix with all the pairwise
 comparisons (contact map).
 """
-function contact(residues::Vector{PDBResidue}, limit::AbstractFloat; criteria::String="All")
-    nplm = residuepairsmatrix(residues, Bool, Val{false}, true)
-    plm = getarray(nplm)
-    @iterateupper plm false begin
-        list[k]=:($contact)(:($residues)[i],:($residues)[j],:($limit),criteria=:($criteria))
-    end
-    nplm
-end
+# function contact(residues::Vector{PDBResidue}, limit::AbstractFloat; criteria::String="All")
+#     nplm = residuepairsmatrix(residues, Bool, Val{false}, true)
+#     plm = getarray(nplm)
+#     @iterateupper plm false begin
+#         list[k]=:($contact)(:($residues)[i],:($residues)[j],:($limit),criteria=:($criteria))
+#     end
+#     nplm
+# end
 
 """
 `distance(residues::Vector{PDBResidue}; criteria::String="All")`
@@ -586,14 +586,14 @@ end
 If `distance` takes a `Vector{PDBResidue}` returns a `PairwiseListMatrix{Float64, false}`
 with all the pairwise comparisons (distance matrix).
 """
-function distance(residues::Vector{PDBResidue}; criteria::String="All")
-    nplm = residuepairsmatrix(residues, Float64, Val{false}, 0.0)
-    plm = getarray(nplm)
-    @iterateupper plm false begin
-        list[k] = :($distance)(:($residues)[i], :($residues)[j], criteria = :($criteria))
-    end
-    nplm
-end
+# function distance(residues::Vector{PDBResidue}; criteria::String="All")
+#     nplm = residuepairsmatrix(residues, Float64, Val{false}, 0.0)
+#     plm = getarray(nplm)
+#     @iterateupper plm false begin
+#         list[k] = :($distance)(:($residues)[i], :($residues)[j], criteria = :($criteria))
+#     end
+#     nplm
+# end
 
 # Proximity average
 # -----------------
